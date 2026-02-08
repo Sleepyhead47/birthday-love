@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#ff758c">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday My Love 🤍</title>
+<title>Happy Birthday My Love 🤍 (TEST)</title>
 
 <style>
 :root{
@@ -23,21 +23,10 @@ body{
   display:flex;justify-content:center;align-items:center;
   background:linear-gradient(135deg,var(--bg1),var(--bg2));
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
-  transition:.6s;
 }
 
-/* Lock screen */
-.lock{
-  position:fixed;inset:0;
-  background:linear-gradient(135deg,#111,#333);
-  color:white;
-  display:flex;flex-direction:column;
-  justify-content:center;align-items:center;
-  text-align:center;
-  z-index:99;
-}
-.lock h1{font-weight:500}
-.lock span{opacity:.8}
+/* Lock removed for test */
+.lock{display:none}
 
 /* Card */
 .card{
@@ -49,7 +38,6 @@ body{
   text-align:center;
   box-shadow:0 30px 60px rgba(0,0,0,.35);
   z-index:2;
-  animation:fadeIn 1.4s ease;
 }
 
 img{
@@ -89,7 +77,7 @@ button{
 .heart{
   position:absolute;top:-10px;
   animation:fall linear infinite;
-  opacity:.9;z-index:1;
+  opacity:.9;
 }
 @keyframes fall{
   to{transform:translateY(110vh) rotate(360deg)}
@@ -105,15 +93,6 @@ button{
   to{transform:translateX(130vw)}
 }
 
-.spark{
-  position:absolute;width:6px;height:6px;
-  background:white;border-radius:50%;
-  animation:spark 1.2s ease-out forwards;
-}
-@keyframes spark{
-  to{transform:translate(var(--x),var(--y));opacity:0}
-}
-
 .popup{
   position:fixed;inset:0;
   background:rgba(0,0,0,.75);
@@ -126,21 +105,10 @@ button{
   text-align:center;
 }
 .popup h1{color:#ff4d6d}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(25px)}
-  to{opacity:1}
-}
 </style>
 </head>
 
 <body>
-
-<!-- MIDNIGHT LOCK -->
-<div class="lock" id="lock">
-  <h1>🤍 Almost there…</h1>
-  <span id="countdown">Opening at midnight (BD)</span>
-</div>
 
 <div id="effects"></div>
 
@@ -157,11 +125,8 @@ button{
   <footer>— Always yours, <span id="from"></span></footer>
 
   <button onclick="playMusic()">🎵 Play Music</button>
-  <br>
-  <canvas id="qr" width="120" height="120"></canvas>
 </div>
 
-<!-- LOVE POPUP -->
 <div class="popup" id="popup">
   <div>
     <h1>I love you 🤍</h1>
@@ -170,12 +135,12 @@ button{
   </div>
 </div>
 
-<audio id="music" loop>
+<audio id="music" preload="auto" loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-/* ✨ EDIT ONLY THIS ✨ */
+/* EDITABLE DATA */
 const data={
   name:"nidhi",
   age:19,
@@ -193,63 +158,31 @@ let i=0;
 (function type(){
   if(i<data.message.length){
     message.textContent+=data.message[i++];
-    setTimeout(type,40);
+    setTimeout(type,35);
   }
 })();
 
-/* 🇧🇩 Bangladesh Time */
-function getBangladeshTime(){
-  const now=new Date();
-  const utc=now.getTime()+now.getTimezoneOffset()*60000;
-  return new Date(utc+6*60*60*1000);
-}
-
-/* 🎯 Target: 3 March 12:00 AM BD */
-function getTargetTime(){
-  const bdNow=getBangladeshTime();
-  let year=bdNow.getFullYear();
-  let target=new Date(year,2,3,0,0,0);
-  if(bdNow>target){
-    target=new Date(year+1,2,3,0,0,0);
-  }
-  return target;
-}
-
-const targetTime=getTargetTime();
-let unlocked=false;
-
-function updateLock(){
-  const now=getBangladeshTime();
-  const diff=targetTime-now;
-
-  if(diff<=0 && !unlocked){
-    unlocked=true;
-    lock.style.display="none";
-    setTimeout(()=>popup.style.display="flex",2500);
-    return;
-  }
-
-  if(diff>0){
-    const d=Math.floor(diff/(1000*60*60*24));
-    const h=Math.floor((diff/(1000*60*60))%24);
-    const m=Math.floor((diff/(1000*60))%60);
-    countdown.textContent=`Opens in ${d}d ${h}h ${m}m`;
-  }
-}
-setInterval(updateLock,1000);
-updateLock();
+/* Auto popup after 2s (test) */
+setTimeout(()=>popup.style.display="flex",2000);
 
 /* Music */
-function playMusic(){music.play();}
+function playMusic(){
+  music.volume=0.7;
+  music.play();
+}
 
 /* Night mode */
-function toggleNight(){document.body.classList.toggle("night");}
+function toggleNight(){
+  document.body.classList.toggle("night");
+}
 
 /* Close popup */
-function closePopup(){popup.style.display="none";}
+function closePopup(){
+  popup.style.display="none";
+}
 
 /* Hearts */
-for(let i=0;i<40;i++){
+for(let i=0;i<35;i++){
   const h=document.createElement("div");
   h.className="heart";
   h.textContent="🤍";
@@ -268,13 +201,6 @@ for(let i=0;i<40;i++){
   el.style.animationDelay=i*3+"s";
   effects.appendChild(el);
 });
-
-/* QR */
-const ctx=qr.getContext("2d");
-ctx.fillStyle="#000";
-for(let y=0;y<120;y+=10)
-  for(let x=0;x<120;x+=10)
-    if(Math.random()>.5) ctx.fillRect(x,y,8,8);
 </script>
 
 </body>
