@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff758c">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Happy Birthday My Love 🤍</title>
@@ -137,7 +139,7 @@ button{
 <!-- MIDNIGHT LOCK -->
 <div class="lock" id="lock">
   <h1>🤍 Almost there…</h1>
-  <span>This opens at midnight</span>
+  <span id="countdown">Opening at midnight (BD)</span>
 </div>
 
 <div id="effects"></div>
@@ -195,12 +197,47 @@ let i=0;
   }
 })();
 
-/* Midnight lock */
-const now=new Date();
-if(now.getHours()===0){
-  lock.style.display="none";
-  setTimeout(()=>popup.style.display="flex",2500);
+/* 🇧🇩 Bangladesh Time */
+function getBangladeshTime(){
+  const now=new Date();
+  const utc=now.getTime()+now.getTimezoneOffset()*60000;
+  return new Date(utc+6*60*60*1000);
 }
+
+/* 🎯 Target: 3 March 12:00 AM BD */
+function getTargetTime(){
+  const bdNow=getBangladeshTime();
+  let year=bdNow.getFullYear();
+  let target=new Date(year,2,3,0,0,0);
+  if(bdNow>target){
+    target=new Date(year+1,2,3,0,0,0);
+  }
+  return target;
+}
+
+const targetTime=getTargetTime();
+let unlocked=false;
+
+function updateLock(){
+  const now=getBangladeshTime();
+  const diff=targetTime-now;
+
+  if(diff<=0 && !unlocked){
+    unlocked=true;
+    lock.style.display="none";
+    setTimeout(()=>popup.style.display="flex",2500);
+    return;
+  }
+
+  if(diff>0){
+    const d=Math.floor(diff/(1000*60*60*24));
+    const h=Math.floor((diff/(1000*60*60))%24);
+    const m=Math.floor((diff/(1000*60))%60);
+    countdown.textContent=`Opens in ${d}d ${h}h ${m}m`;
+  }
+}
+setInterval(updateLock,1000);
+updateLock();
 
 /* Music */
 function playMusic(){music.play();}
@@ -232,18 +269,7 @@ for(let i=0;i<40;i++){
   effects.appendChild(el);
 });
 
-/* Fireworks */
-for(let i=0;i<24;i++){
-  const s=document.createElement("div");
-  s.className="spark";
-  s.style.left="50vw";
-  s.style.top="30vh";
-  s.style.setProperty("--x",(Math.random()*300-150)+"px");
-  s.style.setProperty("--y",(Math.random()*300-150)+"px");
-  effects.appendChild(s);
-}
-
-/* Simple QR */
+/* QR */
 const ctx=qr.getContext("2d");
 ctx.fillStyle="#000";
 for(let y=0;y<120;y+=10)
