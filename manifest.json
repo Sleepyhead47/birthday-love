@@ -1,7 +1,7 @@
 {
-  "name": "Birthday Love 🤍",
-  "short_name": "My Love",
-  "start_url": "./",
+  "name": "Birthday 🤍",
+  "short_name": "Birthday",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ff758c",
   "theme_color": "#ff758c",
