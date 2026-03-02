@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Happy Birthday 🤍</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff758c">
 
 <style>
 :root{
-  --bg1:#ff758c;--bg2:#ffb3c6;
+  --bg1:#ff758c;
+  --bg2:#ffb3c6;
   --card:rgba(255,255,255,.96);
   --text:#444;
 }
-body.night{
-  --bg1:#0f2027;--bg2:#203a43;
-  --card:rgba(20,20,30,.96);
-  --text:#eee;
-}
+
 body{
   margin:0;
   min-height:100vh;
@@ -24,8 +26,22 @@ body{
   align-items:center;
   background:linear-gradient(135deg,var(--bg1),var(--bg2));
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI";
-  transition:.6s;
   overflow:hidden;
+}
+
+/* Falling hearts */
+.heart{
+  position:fixed;
+  top:-10px;
+  animation:fall linear infinite;
+  opacity:.9;
+  z-index:1;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+  }
 }
 
 .card{
@@ -37,6 +53,7 @@ body{
   border-radius:26px;
   text-align:center;
   box-shadow:0 30px 60px rgba(0,0,0,.35);
+  z-index:2;
 }
 
 img{
@@ -55,13 +72,6 @@ p{
   color:var(--text);
   line-height:1.7;
   min-height:90px;
-  font-size:1.05rem;
-}
-
-footer{
-  margin-top:18px;
-  color:var(--text);
-  font-size:.95rem;
 }
 
 button{
@@ -74,14 +84,6 @@ button{
   cursor:pointer;
 }
 
-.toggle{
-  position:absolute;
-  top:14px;
-  right:16px;
-  font-size:1.3rem;
-  cursor:pointer;
-}
-
 .popup{
   position:fixed;
   inset:0;
@@ -91,6 +93,7 @@ button{
   align-items:center;
   z-index:50;
 }
+
 .popup div{
   background:white;
   padding:30px;
@@ -98,23 +101,18 @@ button{
   text-align:center;
   max-width:300px;
 }
-.popup h1{color:#ff4d6d}
 </style>
 </head>
 
 <body>
 
 <div class="card">
-  <div class="toggle" onclick="toggleNight()">🌙</div>
-
   <img src="photo.jpg" alt="Photo">
 
   <h1>Happy Birthday, <span id="name"></span> 🤍</h1>
   <h2>You turn <span id="age"></span> today ✨</h2>
 
   <p id="message"></p>
-
-  <footer>— Always yours, <span id="from"></span></footer>
 
   <button onclick="playMusic()">🎵 Play Music</button>
 </div>
@@ -124,62 +122,65 @@ button{
     <h1>I love you 🤍</h1>
     <p>
       I love you the most. I wanna spend the rest of your birthdays with you.
-      Time is tough, but you are my home and I am yours.
-      Happy birthday again, the prettiest in the world 🤍
+      You are my home 🤍
     </p>
     <button onclick="closePopup()">Close</button>
   </div>
 </div>
 
-<audio id="music" loop>
+<audio id="music">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-/* ✨ EDIT THIS PART ✨ */
+/* EDIT THIS */
 const data={
   name:"nidhi",
   age:19,
-  message:"You are my home, my favorite thought, and my forever choice. I hope this birthday makes you feel as special as you truly are 🤍",
-  from:"Ayan"
+  message:"You are my home, my favorite thought, and my forever choice 🤍"
 };
 
-/* Fill text safely */
-document.getElementById("name").textContent = data.name;
-document.getElementById("age").textContent = data.age;
-document.getElementById("from").textContent = data.from;
+document.getElementById("name").textContent=data.name;
+document.getElementById("age").textContent=data.age;
 
-/* Typewriter effect */
-let i = 0;
-const messageEl = document.getElementById("message");
+/* Typewriter */
+let i=0;
+const msg=document.getElementById("message");
 (function type(){
-  if(i < data.message.length){
-    messageEl.textContent += data.message[i++];
-    setTimeout(type, 40);
+  if(i<data.message.length){
+    msg.textContent+=data.message[i++];
+    setTimeout(type,40);
   }
 })();
 
-/* 🔓 OPEN IMMEDIATELY */
+/* Popup */
 setTimeout(()=>{
   document.getElementById("popup").style.display="flex";
 },2500);
 
-/* Music */
-function playMusic(){
-  document.getElementById("music").play();
-}
-
-/* Night mode */
-function toggleNight(){
-  document.body.classList.toggle("night");
-}
-
-/* Close popup */
 function closePopup(){
   document.getElementById("popup").style.display="none";
 }
 
+/* Music (iPhone safe) */
+function playMusic(){
+  const music=document.getElementById("music");
+  music.play().catch(()=>alert("Tap again to play music 🤍"));
+}
+
+/* Falling Hearts */
+for(let i=0;i<35;i++){
+  const heart=document.createElement("div");
+  heart.className="heart";
+  heart.textContent="🤍";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.fontSize=14+Math.random()*20+"px";
+  heart.style.animationDuration=6+Math.random()*6+"s";
+  document.body.appendChild(heart);
+}
+
 </script>
+
 </body>
 </html>
