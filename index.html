@@ -114,7 +114,7 @@ button{
 
   <p id="message"></p>
 
-  <button onclick="playMusic()">🎵 Play Music</button>
+  <button id="musicBtn" onclick="playMusic()">🎵 Play Music</button>
 </div>
 
 <div class="popup" id="popup">
@@ -133,13 +133,13 @@ Nidhi, my love, I admire your kindness and the way you care. The little things y
 
 I just want be  with you forever, we will grow togather, i love you the most.
 
-Honey, I’ll always treat your heart with care. You are my home. 🤍
+Honey, I'll always treat your heart with care. You are my home. 🤍
     </p>
     <button onclick="closePopup()">Close</button>
   </div>
 </div>
 
-<audio id="music">
+<audio id="music" preload="auto">
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
@@ -174,10 +174,37 @@ function closePopup(){
   document.getElementById("popup").style.display="none";
 }
 
-/* Music (iPhone safe) */
+/* Music - Mobile friendly version */
+let isPlaying = false;
+
 function playMusic(){
-  const music=document.getElementById("music");
-  music.play().catch(()=>alert("Tap again to play music 🤍"));
+  const music = document.getElementById("music");
+  const btn = document.getElementById("musicBtn");
+  
+  if(isPlaying){
+    music.pause();
+    btn.textContent = "🎵 Play Music";
+    isPlaying = false;
+  } else {
+    const playPromise = music.play();
+    
+    if(playPromise !== undefined){
+      playPromise
+        .then(() => {
+          btn.textContent = "⏸️ Pause Music";
+          isPlaying = true;
+        })
+        .catch(error => {
+          console.error("Audio play failed:", error);
+          alert("Please tap the button again 🤍");
+        });
+    } else {
+      // Older browsers
+      music.play();
+      btn.textContent = "⏸️ Pause Music";
+      isPlaying = true;
+    }
+  }
 }
 
 /* Falling Hearts */
